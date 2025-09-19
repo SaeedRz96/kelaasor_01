@@ -1,5 +1,7 @@
 from django.http.response import HttpResponse, JsonResponse
 from product.models import Product, Category
+from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView, UpdateAPIView, RetrieveAPIView
+from product.serializers import ProductSerializer, ProductCreateSerializer
 
 
 def product_list(request):
@@ -62,3 +64,28 @@ def update_product(request):
     product.amount = 5
     product.save()
     return HttpResponse("Product UPdated")
+
+
+class AllProductList(ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+class AddProduct(CreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductCreateSerializer
+
+
+class DeleteProduct(DestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductCreateSerializer
+
+
+class UpdateProduct(UpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductCreateSerializer
+
+
+class RetrieveProduct(RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductCreateSerializer
