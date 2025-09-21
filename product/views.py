@@ -1,7 +1,10 @@
 from django.http.response import HttpResponse, JsonResponse
 from product.models import Product, Category
-from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView, UpdateAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView, UpdateAPIView, RetrieveAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from product.serializers import ProductSerializer, ProductCreateSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+from django.shortcuts import render
 
 
 def product_list(request):
@@ -37,6 +40,7 @@ def all_products(request):
     products = list(products)
     return JsonResponse(products, safe=False)
 
+
 def all_categories(request):
     categories = Category.objects.all().values('name')
     categories = list(categories)
@@ -69,6 +73,10 @@ def update_product(request):
 class AllProductList(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['category']
+    search_fields = ['title']
+    ordering_fields = ['price','amount']
 
 
 class AddProduct(CreateAPIView):
@@ -87,5 +95,23 @@ class UpdateProduct(UpdateAPIView):
 
 
 class RetrieveProduct(RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductCreateSerializer
+
+
+def welcome(request):
+    products = Product.objects.all()
+    data = {
+        'products' : products
+    }
+    return render(request, 'product/welcome.html', context=data)
+
+
+class ProductListCreate(ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductCreateSerializer
+
+
+class ProductDestoryUpdateRetrieve(RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductCreateSerializer

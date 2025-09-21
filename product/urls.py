@@ -12,7 +12,10 @@ from product.views import (
     AddProduct,
     DeleteProduct,
     UpdateProduct,
-    RetrieveProduct
+    RetrieveProduct,
+    welcome,
+    ProductListCreate,
+    ProductDestoryUpdateRetrieve
 )
 
 
@@ -29,5 +32,8 @@ urlpatterns = [
     path('add-product-new', AddProduct.as_view()),
     path('delete-product-new/<str:pk>', DeleteProduct.as_view()),
     path('update-product-new/<str:pk>',UpdateProduct.as_view()),
-    path('retrieve-product/<str:pk>', RetrieveProduct.as_view())
+    path('retrieve-product/<str:pk>', RetrieveProduct.as_view()),
+    path('welcome', welcome),
+    path('product-list-create', ProductListCreate.as_view()),
+    path('product-retrieve-update-destory/<str:pk>', ProductDestoryUpdateRetrieve.as_view())
 ]
