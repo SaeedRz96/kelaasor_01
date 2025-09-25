@@ -5,6 +5,7 @@ from product.serializers import ProductSerializer, ProductCreateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from django.shortcuts import render
+from rest_framework import permissions
 
 
 def product_list(request):
@@ -71,6 +72,7 @@ def update_product(request):
 
 
 class AllProductList(ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
@@ -80,6 +82,7 @@ class AllProductList(ListAPIView):
 
 
 class AddProduct(CreateAPIView):
+    permission_classes = [permissions.IsAdminUser]
     queryset = Product.objects.all()
     serializer_class = ProductCreateSerializer
 
@@ -110,7 +113,12 @@ def welcome(request):
 class ProductListCreate(ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductCreateSerializer
-
+    
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [permissions.IsAdminUser()]
+        elif self.request.method == 'GET':
+            return [permissions.IsAuthenticated()]
 
 class ProductDestoryUpdateRetrieve(RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
