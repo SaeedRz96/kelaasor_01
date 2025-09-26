@@ -4,6 +4,7 @@ from user_app.serializers import BasketItemSerializer
 from user_app.models import Basket, BasketItem
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from user_app.permissions import IsNotBanUser
 
 
 def _update_basket_price(basket):
@@ -20,7 +21,7 @@ def _update_basket_price(basket):
 
 
 class AddProductToBasketItem(CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsNotBanUser]
     serializer_class = BasketItemSerializer
     queryset = BasketItem.objects.all()
     
