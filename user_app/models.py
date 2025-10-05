@@ -26,3 +26,9 @@ class BasketItem(models.Model):
     quantity = models.IntegerField(default=1)
     basket = models.ForeignKey(Basket, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class OTP(models.Model):
+    otp = models.IntegerField()
+    phone_number = models.CharField(max_length=12)
+    expire_date = models.DateTimeField(null=True,blank=True)
